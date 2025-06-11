@@ -36,6 +36,45 @@ public class ZadanieRestController {
         return ResponseEntity.ok(zadania);
     }
 
+    @GetMapping("/projekty/{projektId}/zadania/{zadanieId}")
+    public ResponseEntity<Zadanie> getZadanie(@PathVariable Integer projektId, @PathVariable Integer zadanieId) {
+        if (!projektService.getProjekt(projektId).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return zadanieService.getZadanie(zadanieId, projektId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @PostMapping("/projekty/{projektId}/zadania")
+    public ResponseEntity<Zadanie> setZadanie(@PathVariable Integer projektId, @Valid @RequestBody Zadanie zadanie) {
+        if (!projektService.getProjekt(projektId).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        zadanie = zadanieService.setZadanie(zadanie, projektId);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{zadanieId}")
+                .buildAndExpand(zadanie.getZadanieId())
+                .toUri();
+        return ResponseEntity.created(location).body(zadanie);
+    }
+    @PutMapping("/projekty/{projektId}/zadania/{zadanieId}")
+    public ResponseEntity<Zadanie> updateZadanie(@PathVariable Integer projektId, @PathVariable Integer zadanieId, @Valid @RequestBody Zadanie zadanie) {
+        if (!projektService.getProjekt(projektId).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        zadanie.setZadanieId(zadanieId);
+        zadanie = zadanieService.setZadanie(zadanie, projektId);
+        return ResponseEntity.ok(zadanie);
+    }
+    @DeleteMapping("/projekty/{projektId}/zadania/{zadanieId}")
+    public ResponseEntity<Void> deleteZadanie(@PathVariable Integer projektId, @PathVariable Integer zadanieId) {
+        if (!projektService.getProjekt(projektId).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        zadanieService.deleteZadanie(zadanieId, projektId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
 
 }

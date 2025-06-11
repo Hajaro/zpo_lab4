@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,29 @@ public class Projekt {
             joinColumns = {@JoinColumn(name="projekt_id")},
             inverseJoinColumns = {@JoinColumn(name="student_id")})
     private Set<Student> studenci;
+
+    public Projekt(int id, String nazwa2, String opis2, LocalDateTime now, LocalDate of) {
+        this.projektId = id;
+        this.nazwa = nazwa2;
+        this.opis = opis2;
+        this.createdDate = now;
+        this.lastModifiedDate = now;
+    }
+
+    public Projekt(String nazwa3, String opis3, LocalDate of) {
+        this.nazwa = nazwa3;
+        this.opis = opis3;
+        this.createdDate = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    public Projekt(int i, String nazwa1, String opis1, LocalDate of) {
+        this.projektId = i;
+        this.nazwa = nazwa1;
+        this.opis = opis1;
+        this.createdDate = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 
     public Integer getProjektId() {
         return projektId;
